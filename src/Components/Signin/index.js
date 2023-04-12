@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
+import { firebase } from '../../firebase';
 
 import { CircularProgress } from '@material-ui/core';
-import { Redirect } from 'react-router-dom';
 
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { showSuccessToast, showErrorToast } from '../Utils/tools';
 
-const SignIn = () => {
+const SignIn = (props) => {
   const [loading, setLoading] = useState(false);
 
   const formik = useFormik({
     initialValues: {
-      email: '',
-      password: '',
+      email: 'francis@gmail.com',
+      password: 'testing123',
     },
     validationSchema: Yup.object({
       email: Yup.string()
@@ -24,9 +25,25 @@ const SignIn = () => {
     onSubmit: (values) => {
       /// go to server with field values
       setLoading(true);
-      console.log(values);
+      submitForm(values);
     },
   });
+
+  const submitForm = (values) => {
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(values.email, values.password)
+      .then(() => {
+        // show success toast
+        showSuccessToast('Welcome back !!');
+        props.history.push('/dashboard');
+      })
+      .catch((error) => {
+        setLoading(false);
+        // show toasts
+        showErrorToast(error.message);
+      });
+  };
 
   return (
     <div className='container'>
@@ -46,6 +63,7 @@ const SignIn = () => {
           ) : null}
 
           <input
+            placeholder='Enter your password'
             name='password'
             type='Password'
             onChange={formik.handleChange}
