@@ -5,22 +5,20 @@ import { Link } from 'react-router-dom';
 
 import { CityLogo } from '../Utils/tools';
 
-import { firebase } from '../../firebase';
-
-import { showSuccessToast, showErrorToast } from '../Utils/tools';
+import { logoutHandler } from '../Utils/tools';
 
 const Header = ({ user }) => {
-  const logoutHandler = () => {
-    firebase
-      .auth()
-      .signOut()
-      .then(() => {
-        showSuccessToast('Good bye!!');
-      })
-      .catch((error) => {
-        showErrorToast(error.message);
-      });
-  };
+  // const logoutHandler = () => {
+  //   firebase
+  //     .auth()
+  //     .signOut()
+  //     .then(() => {
+  //       showSuccessToast('Good bye!!');
+  //     })
+  //     .catch((error) => {
+  //       showErrorToast(error.message);
+  //     });
+  // };
 
   return (
     <AppBar
