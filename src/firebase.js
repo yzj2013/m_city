@@ -4,7 +4,9 @@ import 'firebase/auth';
 
 import 'firebase/firestore';
 
-import { cityDb } from './temp/m-city-export';
+import 'firebase/storage';
+
+// import { cityDb } from './temp/m-city-export';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyByRHZj_ND601u6wHnaSwP_5r-ERiZrLLQ',
