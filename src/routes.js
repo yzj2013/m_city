@@ -8,6 +8,8 @@ import Header from './Components/Header_footer/header';
 import Footer from './Components/Header_footer/footer';
 import Home from './Components/Home';
 import SignIn from './Components/Signin';
+import TheTeam from './Components/theTeam';
+
 import Dashboard from './Components/Admin/Dashboard';
 import AdminPlayers from './Components/Admin/players';
 import AddEditPlayers from './Components/Admin/players/addEditPlayers';
@@ -34,6 +36,7 @@ const Routes = ({ user }) => {
           component={AuthGuard(AdminPlayers)}
         />
         <Route path='/dashboard' exact component={AuthGuard(Dashboard)} />
+        <Route path='/the_team' exact component={TheTeam} />
         <Route
           path='/sign_in'
           exact

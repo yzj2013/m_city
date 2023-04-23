@@ -16,7 +16,7 @@ const Blocks = () => {
             id: doc.id,
             ...doc.data(),
           }));
-          console.log(matches);
+          // console.log(matches);
           setMatches(matches);
         })
         .catch((error) => {
