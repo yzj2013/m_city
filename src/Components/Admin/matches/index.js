@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import AdminLayout from '../../../Hoc/AdminLayout';
-import { playersCollection } from '../../../firebase';
+import { matchesCollection } from '../../../firebase';
 import {
   Button,
   Table,
@@ -14,25 +14,25 @@ import {
 } from '@material-ui/core';
 import { showErrorToast, showSuccessToast } from '../../Utils/tools';
 
-const AdminPlayers = () => {
+const AdminMatches = () => {
   const [lastVisible, setLastVisible] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [players, setPlayers] = useState(null);
+  const [matches, setMatches] = useState(null);
 
   useEffect(() => {
-    if (!players) {
+    if (!matches) {
       setLoading(true);
-      playersCollection
+      matchesCollection
         .limit(2)
         .get()
         .then((snapshot) => {
           const lastVisible = snapshot.docs[snapshot.docs.length - 1];
-          const players = snapshot.docs.map((doc) => ({
+          const matches = snapshot.docs.map((doc) => ({
             id: doc.id,
             ...doc.data(),
           }));
           setLastVisible(lastVisible);
-          setPlayers(players);
+          setMatches(matches);
         })
         .catch((error) => {
           showErrorToast(error);
@@ -41,23 +41,23 @@ const AdminPlayers = () => {
           setLoading(false);
         });
     }
-  }, [players]);
+  }, [matches]);
 
-  const loadMorePlayers = () => {
+  const loadMoreMatches = () => {
     if (lastVisible) {
       setLoading(true);
-      playersCollection
+      matchesCollection
         .startAfter(lastVisible)
         .limit(2)
         .get()
         .then((snapshot) => {
           const lastVisible = snapshot.docs[snapshot.docs.length - 1];
-          const newPlayers = snapshot.docs.map((doc) => ({
+          const newMatches = snapshot.docs.map((doc) => ({
             id: doc.id,
             ...doc.data(),
           }));
           setLastVisible(lastVisible);
-          setPlayers([...players, ...newPlayers]);
+          setMatches([...matches, ...newMatches]);
         })
         .catch((error) => {
           showErrorToast(error);
@@ -76,15 +76,15 @@ const AdminPlayers = () => {
   //   console.log(lastVisible);
 
   return (
-    <AdminLayout title='The players'>
+    <AdminLayout title='The matches'>
       <div className='mb-5'>
         <Button
           disableElevation
           variant='outlined'
           component={Link}
-          to={'/admin_players/add_player'}
+          to={'/admin_matches/add_match'}
         >
-          Add player
+          Add match
         </Button>
       </div>
 
@@ -92,28 +92,34 @@ const AdminPlayers = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>First name</TableCell>
-              <TableCell>Last name</TableCell>
-              <TableCell>Number</TableCell>
-              <TableCell>Position</TableCell>
+              <TableCell>Date</TableCell>
+              <TableCell>Match</TableCell>
+              <TableCell>Result</TableCell>
+              <TableCell>Final</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {players
-              ? players.map((player, i) => (
-                  <TableRow key={player.id}>
+            {matches
+              ? matches.map((match, i) => (
+                  <TableRow key={match.id}>
+                    <TableCell>{match.date}</TableCell>
                     <TableCell>
-                      <Link to={`/admin_players/edit_player/${player.id}`}>
-                        {player.name}
+                      <Link to={`/admin_matches/edit_match/${match.id}`}>
+                        {match.away} <strong>-</strong> {match.local}
                       </Link>
                     </TableCell>
                     <TableCell>
-                      <Link to={`/admin_players/edit_player/${player.id}`}>
-                        {player.lastname}
-                      </Link>
+                      {match.resultAway} <strong>-</strong> {match.resultLocal}
                     </TableCell>
-                    <TableCell>{player.number}</TableCell>
-                    <TableCell>{player.position}</TableCell>
+                    <TableCell>
+                      {match.final === 'Yes' ? (
+                        <span className='matches_tag_red'>Final</span>
+                      ) : (
+                        <span className='matches_tag_green'>
+                          Not played yet
+                        </span>
+                      )}
+                    </TableCell>
                   </TableRow>
                 ))
               : null}
@@ -124,7 +130,7 @@ const AdminPlayers = () => {
       <Button
         variant='contained'
         color='primary'
-        onClick={() => loadMorePlayers()}
+        onClick={() => loadMoreMatches()}
         disabled={loading}
       >
         Load more
@@ -142,4 +148,4 @@ const AdminPlayers = () => {
   );
 };
 
-export default AdminPlayers;
+export default AdminMatches;
