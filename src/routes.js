@@ -10,6 +10,7 @@ import Home from './Components/Home';
 import SignIn from './Components/Signin';
 import TheTeam from './Components/theTeam';
 import TheMatches from './Components/theMatches';
+import NotFound from './Components/not_found';
 
 import Dashboard from './Components/Admin/Dashboard';
 import AdminPlayers from './Components/Admin/players';
@@ -49,6 +50,7 @@ const Routes = ({ user }) => {
           component={(props) => <SignIn {...props} user={user} />}
         />
         <Route path='/' exact component={Home} />
+        <Route component={NotFound} />
       </Switch>
       <ToastContainer></ToastContainer>
       <Footer />
